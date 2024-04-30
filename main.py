@@ -118,4 +118,4 @@ class DCA:
 
 if __name__ == '__main__':
     dca = DCA('config.ini')
-    dca.test()
+    dca.run()
