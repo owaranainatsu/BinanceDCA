@@ -5,21 +5,20 @@ import pandas as pd
 from cryptography.hazmat.primitives.serialization import load_pem_private_key
 from collections import defaultdict
 import schedule
+import os
 
 class DCA:
     def __init__(self, config):
         self.cfg = ConfigParser()
         self.cfg.read(config)
-        self.api_key = self.cfg['account']['api_key']
-        self.private_key = self.cfg['account']['secret_key']
         # self.base_url = self.cfg['account']['base_url']
         self.minium_cost = float(self.cfg['general']['minium_cost'])
         self.total_cost = float(self.cfg['general']['total_cost'])
-        self.total_ratio = sum(map(float, self.symbols_ratio.values()))
         self.symbols_ratio = self.cfg['symbols_ratio']
+        self.total_ratio = sum(map(float, self.symbols_ratio.values()))
         self.exchange = ccxt.binance({
-            'apiKey': self.api_key,
-            'secret': self.private_key
+            'apiKey': os.environ.get("API_KEY"),
+            'secret': os.environ.get("SECRET_KEY")
         })
 
         self.crypto_purchased = defaultdict(float)
@@ -119,4 +118,4 @@ class DCA:
 
 if __name__ == '__main__':
     dca = DCA('config.ini')
-    dca.run()
+    dca.test()
