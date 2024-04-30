@@ -117,5 +117,6 @@ class DCA:
             time.sleep(1)
 
 if __name__ == '__main__':
+    print('Starting DCA bot...')
     dca = DCA('config.ini')
     dca.run()
