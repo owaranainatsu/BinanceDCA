@@ -33,7 +33,7 @@ class DCA:
             candles = self.exchange.fetch_ohlcv(symbol, timeframe, since, limit)
             return candles
         except Exception as e:
-            print(f"An error occurred while fetching data: {e}")
+            logging.error(f"An error occurred while fetching data: {e}")
             return None
       
     
@@ -69,38 +69,38 @@ class DCA:
         try:
             mean, upper_band ,lower_band = self.calculate_bollinger_bands(close_prices)
         except ValueError as e:
-            print(f"An error occurred while calculating bollinger bands for {symbol}: {e}")
+            logging.error(f"An error occurred while calculating bollinger bands for {symbol}: {e}")
         market_price = self.exchange.fetch_ticker(symbol)['last']
 
         if market_price >= upper_band:
-            print(f"Market price({market_price}) is above the upper band({upper_band}) for {symbol}. Selling...")
+            logging.info(f"Market price({market_price}) is above the upper band({upper_band}) for {symbol}. Selling...")
             try:
                 response = self.exchange.create_market_sell_order_with_cost('BTC/JPY', self.total_cost * ratio)
                 self.total_investment -= response['cost']
                 self.crypto_purchased[symbol] -= response['amount']
-                print(f'Sold {response["amount"]} {symbol} for {response["cost"]} JPY')
+                logging.info(f'Sold {response["amount"]} {symbol} for {response["cost"]} JPY')
             except Exception as e:
-                print(f"An error occurred while placing sell order for {symbol}: {e}")
+                logging.error(f"An error occurred while placing sell order for {symbol}: {e}")
         else:
             price_weight = min(2, 2 * (upper_band - market_price) / (upper_band - lower_band))
             final_cost = self.total_cost * ratio * price_weight
             if final_cost <= self.minium_cost:
-                print(f"Final cost({final_cost}) is less than the minimum cost({self.minium_cost}) for {symbol}. Skipping...")
+                logging.info(f"Final cost({final_cost}) is less than the minimum cost({self.minium_cost}) for {symbol}. Skipping...")
                 return
             try:
                 response = self.exchange.create_market_buy_order_with_cost('BTC/JPY', final_cost)
                 self.total_investment += response['cost']
                 self.crypto_purchased[symbol] += response['amount']
-                print(f'Bought {response["amount"]} {symbol} for {response["cost"]} JPY')
+                logging.info(f'Bought {response["amount"]} {symbol} for {response["cost"]} JPY')
             except Exception as e:
-                print(f"An error occurred while placing buy order for {symbol}: {e}")
+                logging.error(f"An error occurred while placing buy order for {symbol}: {e}")
     
     def place_all_orders(self):
         for symbol, ratio in self.symbols_ratio.items():
             self.place_order(symbol, float(ratio) / self.total_ratio)
             time.sleep(1)
-        print(f"Total investment: {self.total_investment} JPY")
-        print(f"Crypto purchased: {self.crypto_purchased}")
+        logging.info(f"Total investment: {self.total_investment} JPY")
+        logging.info(f"Crypto purchased: {self.crypto_purchased}")
         self.calculate_profit()
     
     def calculate_profit(self):
@@ -109,7 +109,7 @@ class DCA:
             market_price = self.exchange.fetch_ticker(symbol)['last']
             total_balance += amount * market_price
             time.sleep(1)
-        print(f"Total balance: {total_balance} JPY")
+        logging.info(f"Total balance: {total_balance} JPY")
 
     
     def run(self):
