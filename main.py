@@ -6,6 +6,7 @@ from cryptography.hazmat.primitives.serialization import load_pem_private_key
 from collections import defaultdict
 import schedule
 import os
+import logging
 
 class DCA:
     def __init__(self, config):
@@ -117,6 +118,7 @@ class DCA:
             time.sleep(1)
 
 if __name__ == '__main__':
-    print('Starting DCA bot...')
+    logging.basicConfig(level=logging.INFO)
+    logging.info('Starting DCA bot...')
     dca = DCA('config.ini')
     dca.run()
