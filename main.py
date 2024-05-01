@@ -11,6 +11,7 @@ import logging
 class DCA:
     def __init__(self, config):
         self.cfg = ConfigParser()
+        self.cfg.optionxform = str
         self.cfg.read(config)
         # self.base_url = self.cfg['account']['base_url']
         self.minium_cost = float(self.cfg['general']['minium_cost'])
@@ -60,6 +61,8 @@ class DCA:
         
         print(self.exchange.fetch_ticker('BTC/JPY')['last'])
         print(sum(map(float, self.symbols_ratio.values())))
+        for symbol, ratio in self.symbols_ratio.items():
+            print(symbol, ratio)
 
 
     def place_order(self, symbol, ratio):
@@ -121,4 +124,4 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
     logging.info('Starting DCA bot...')
     dca = DCA('config.ini')
-    dca.run()
+    dca.test()
