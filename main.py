@@ -17,6 +17,7 @@ class DCA:
         self.minium_cost = float(self.cfg['general']['minium_cost'])
         self.total_cost = float(self.cfg['general']['total_cost'])
         self.symbols_ratio = self.cfg['symbols_ratio']
+        self.currency = self.cfg['general']['currency']
         self.total_ratio = sum(map(float, self.symbols_ratio.values()))
         self.exchange = ccxt.binance({
             'apiKey': os.environ.get("API_KEY"),
@@ -31,7 +32,7 @@ class DCA:
     def fetch_data(self, symbol, timeframe='1d', limit=20):
         try:
             since = self.exchange.milliseconds() - 86400000 * limit # default 20 days ago
-            candles = self.exchange.fetch_ohlcv(symbol, timeframe, since, limit)
+            candles = self.exchange.fetch_ohlcv(symbol + '/' + self.currency, timeframe, since, limit)
             return candles
         except Exception as e:
             logging.error(f"An error occurred while fetching data: {e}")
@@ -73,12 +74,12 @@ class DCA:
             mean, upper_band ,lower_band = self.calculate_bollinger_bands(close_prices)
         except ValueError as e:
             logging.error(f"An error occurred while calculating bollinger bands for {symbol}: {e}")
-        market_price = self.exchange.fetch_ticker(symbol)['last']
+        market_price = self.exchange.fetch_ticker(symbol + '/' + self.currency)['last']
 
         if market_price >= upper_band:
             logging.info(f"Market price({market_price}) is above the upper band({upper_band}) for {symbol}. Selling...")
             try:
-                response = self.exchange.create_market_sell_order_with_cost('BTC/JPY', self.total_cost * ratio)
+                response = self.exchange.create_market_sell_order_with_cost(symbol + '/' + self.currency, self.total_cost * ratio)
                 self.total_investment -= response['cost']
                 self.crypto_purchased[symbol] -= response['amount']
                 logging.info(f'Sold {response["amount"]} {symbol} for {response["cost"]} JPY')
@@ -91,7 +92,7 @@ class DCA:
                 logging.info(f"Final cost({final_cost}) is less than the minimum cost({self.minium_cost}) for {symbol}. Skipping...")
                 return
             try:
-                response = self.exchange.create_market_buy_order_with_cost('BTC/JPY', final_cost)
+                response = self.exchange.create_market_buy_order_with_cost(symbol + '/' + self.currency, final_cost)
                 self.total_investment += response['cost']
                 self.crypto_purchased[symbol] += response['amount']
                 logging.info(f'Bought {response["amount"]} {symbol} for {response["cost"]} JPY')
@@ -109,7 +110,7 @@ class DCA:
     def calculate_profit(self):
         total_balance = 0
         for symbol, amount in self.crypto_purchased.items():
-            market_price = self.exchange.fetch_ticker(symbol)['last']
+            market_price = self.exchange.fetch_ticker(symbol + '/' + self.currency)['last']
             total_balance += amount * market_price
             time.sleep(1)
         logging.info(f"Total balance: {total_balance} JPY")
@@ -124,4 +125,4 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
     logging.info('Starting DCA bot...')
     dca = DCA('config.ini')
-    dca.test()
+    dca.run()
