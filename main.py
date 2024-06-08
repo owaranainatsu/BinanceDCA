@@ -26,8 +26,10 @@ class DCA:
 
         self.crypto_purchased = defaultdict(float)
         self.total_investment = 0
-        schedule.every().day.at("00:00").do(self.place_all_orders)
-        schedule.every().day.at("12:00").do(self.place_all_orders)
+        if os.environ.get("MODE") == '1':
+            print('Running in mode 1...')
+            schedule.every().day.at("00:00").do(self.place_all_orders)
+            schedule.every().day.at("12:00").do(self.place_all_orders)
 
     def fetch_data(self, symbol, timeframe='1d', limit=20):
         try:
