@@ -79,6 +79,7 @@ class DCA:
             mean, upper_band ,lower_band = self.calculate_bollinger_bands(close_prices)
         except ValueError as e:
             logging.error(f"An error occurred while calculating bollinger bands for {symbol}: {e}")
+            return
         market_price = self.exchange.fetch_ticker(symbol + '/' + self.currency)['last']
 
         if market_price >= upper_band:
