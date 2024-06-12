@@ -43,6 +43,8 @@ class DCA:
     
     def calculate_bollinger_bands(self, close_prices, window_size=20, num_of_std=2):
         if len(close_prices) < window_size:
+            logging.error(f"Insufficient data: {len(close_prices)}")
+            logging.info(close_prices)
             raise ValueError("Insufficient data")
         close_prices_df = pd.DataFrame(close_prices)
         rolling_mean = close_prices_df.rolling(window=window_size).mean()
@@ -59,13 +61,14 @@ class DCA:
         # # exchange.set_sandbox_mode(True)
         # #exchange.create_limit_buy_order('BTC/USDT', 0.001, 30000)
         # response = self.fetch_data('BTC/JPY')
-        data = self.fetch_data('BTC/JPY')
+        data = self.fetch_data('ETH')
         close_prices = [x[-2] for x in data]
-        
-        print(self.exchange.fetch_ticker('BTC/JPY')['last'])
-        print(sum(map(float, self.symbols_ratio.values())))
-        for symbol, ratio in self.symbols_ratio.items():
-            print(symbol, ratio)
+        print(len(close_prices))
+        print(self.calculate_bollinger_bands(close_prices))
+        # print(self.exchange.fetch_ticker('ETH/JPY')['last'])
+        # print(sum(map(float, self.symbols_ratio.values())))
+        # for symbol, ratio in self.symbols_ratio.items():
+        #     print(symbol, ratio)
 
 
     def place_order(self, symbol, ratio):
