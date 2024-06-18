@@ -107,8 +107,8 @@ class DCA:
     
     def place_all_orders(self):
         for symbol, ratio in self.symbols_ratio.items():
-            self.place_order(symbol, float(ratio) / self.total_ratio)
             time.sleep(1)
+            self.place_order(symbol, float(ratio) / self.total_ratio)
         logging.info(f"Total investment: {self.total_investment} JPY")
         logging.info(f"Crypto purchased: {self.crypto_purchased}")
         self.calculate_profit()
