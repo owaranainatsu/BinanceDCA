@@ -27,7 +27,7 @@ jobs:
         id: build-image
         run: |
           IMAGE_TAG=latest
-          REPOSITORY=binance-dca
+          REPOSITORY=binance_dca
           docker build -t ${{ secrets.AWS_ECR_REGISTRY }}/$REPOSITORY:$IMAGE_TAG .
           docker push ${{ secrets.AWS_ECR_REGISTRY }}/$REPOSITORY:$IMAGE_TAG
       
