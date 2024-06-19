@@ -10,10 +10,10 @@
 - [ ] split main.py to a base class file and strategy class files
 - [ ] add MODE=0 which runs simple DCA 
 - [ ] add a backtest class with visualization
-- [ ] add a database for data collection and analysis
 - [ ] add more strategies
 
 ## 2. Infra
 - [ ] transfer from Fargate to EC2 instance
+- [ ] use S3 bucket for data collection and analysis
 ## 3. Documentation
 - [ ] add a deploy tutorial
