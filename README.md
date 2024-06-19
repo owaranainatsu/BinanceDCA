@@ -9,7 +9,8 @@
 ## 1. Codebase
 - [ ] split main.py to a base class file and strategy class files
 - [ ] add MODE=0 which runs simple DCA 
-- [ ] add a back test class with visualization
+- [ ] add a backtest class with visualization
+- [ ] add a database for data collection and analysis
 - [ ] add more strategies
 
 ## 2. Infra
