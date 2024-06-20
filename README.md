@@ -5,8 +5,8 @@
 ![image](https://github.com/owaranainatsu/binanceDCA/assets/57721325/74a4d2ca-117d-458a-9acd-f44f1a1486d0)
 
 ## Strategies
-# 0. Simple DCA （TODO）
-# 1. DCA based on Bollinger Bands
+### 0. Simple DCA （TODO）
+### 1. DCA based on Bollinger Bands
 # TODO
 ## 1. Codebase
 - [ ] split main.py to a base class file and strategy class files
