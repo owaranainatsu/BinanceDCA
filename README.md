@@ -8,6 +8,7 @@
 # TODO
 ## 1. Codebase
 - [ ] split main.py to a base class file and strategy class files
+- [ ] make config.ini private 😄
 - [ ] add MODE=0 which runs simple DCA 
 - [ ] add a backtest class with visualization
 - [ ] add more strategies
