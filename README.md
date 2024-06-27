@@ -19,7 +19,7 @@
 - [ ] add more strategies
 
 ## 2. Infra
-- [ ] transfer from Fargate to EC2 instance
+- [x] transfer from Fargate to EC2 instance
 - [ ] use S3 bucket for data collection and analysis
 ## 3. Documentation
 - [ ] add a deploy tutorial
